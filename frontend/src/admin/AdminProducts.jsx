@@ -1,6 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { adminProducts, adminCategories, bulkUpdateProductImage } from '../api';
+import { adminProducts, adminCategories, bulkUpdateProductImage, uploadImage, aiImages } from '../api';
+
+function isPlaceholderImage(url) {
+  if (!url) return true;
+  return url.includes('cover.php') || url.includes('windows-10-enterprise-ltsc-2021.png');
+}
 
 export default function AdminProducts() {
   const [list, setList] = useState([]);
@@ -11,6 +16,9 @@ export default function AdminProducts() {
   const [bulkImageFile, setBulkImageFile] = useState(null);
   const [bulkImagePreview, setBulkImagePreview] = useState(null);
   const [bulkApplying, setBulkApplying] = useState(false);
+  const [aiStatus, setAiStatus] = useState(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiGeneratingId, setAiGeneratingId] = useState(null);
   const fileInputRef = useRef(null);
   const menuRef = useRef(null);
 
@@ -24,6 +32,13 @@ export default function AdminProducts() {
       setList(r.data || []);
     }).catch(() => {}).finally(() => setLoading(false));
   }, [categoryFilter]);
+
+  useEffect(() => {
+    setAiLoading(true);
+    aiImages.status().then((r) => {
+      setAiStatus(r.data || null);
+    }).catch(() => {}).finally(() => setAiLoading(false));
+  }, []);
 
   useEffect(() => {
     const onDocClick = (e) => {
@@ -76,6 +91,67 @@ export default function AdminProducts() {
     }
   };
 
+  const handleGenerateAiImage = async (product) => {
+    const confirmed = window.confirm(
+      `Generate a unique AI image for "${product.name}"?\n\n` +
+      'This calls DALL-E 3 (~$0.04) and updates the product image immediately.'
+    );
+    if (!confirmed) return;
+
+    setAiGeneratingId(product.id);
+    try {
+      const resp = await fetch(
+        `${import.meta.env.VITE_API_URL || '/api'}/admin/ai-images/index.php?action=generate&id=${product.id}`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('admin_token') || ''}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const data = await resp.json();
+      if (!resp.ok || !data.success) {
+        throw new Error(data.message || resp.statusText);
+      }
+
+      // Update the product in the list with the new image URL
+      setList((prev) => prev.map((p) =>
+        p.id === product.id ? { ...p, image_url: data.image_url } : p
+      ));
+
+      // Refresh AI status
+      aiImages.status().then((r) => setAiStatus(r.data || null)).catch(() => {});
+
+      alert(`Image generated for "${product.name}"!`);
+    } catch (err) {
+      alert(err.message || 'AI generation failed. Ensure OPENAI_API_KEY is set on the server.');
+    } finally {
+      setAiGeneratingId(null);
+    }
+  };
+
+  const handleUploadProductImage = async (product) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/jpeg,image/png,image/gif,image/webp';
+    input.onchange = async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const url = await uploadImage(file);
+        await adminProducts.update({ id: product.id, image_url: url });
+        setList((prev) => prev.map((p) =>
+          p.id === product.id ? { ...p, image_url: url } : p
+        ));
+        alert('Image uploaded and applied to this product.');
+      } catch (err) {
+        alert(err.message || 'Upload failed');
+      }
+    };
+    input.click();
+  };
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: '1.5rem' }}>
@@ -116,10 +192,67 @@ export default function AdminProducts() {
               </button>
             </>
           )}
-        </div>
       </div>
+    </div>
 
-      <div className="form-group" style={{ maxWidth: 280, marginBottom: '1rem' }}>
+    <div className="card" style={{ marginBottom: '1.5rem', padding: '1.5rem' }}>
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>AI Product Images</h3>
+      {aiLoading ? (
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Checking image coverage…</p>
+      ) : aiStatus ? (
+        <>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}>
+            {aiStatus.total || 0} active products · {aiStatus.needing_images || 0} need images · {aiStatus.with_images || 0} have images
+          </p>
+          {aiStatus.needing_images > 0 && (
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={async () => {
+                  const confirmed = window.confirm(
+                    `Generate AI images for ${aiStatus.needing_images} products using DALL-E 3?\n\n` +
+                    'This will create a Python script run on the server. Estimate: $0.04/image × ' + aiStatus.needing_images + ` ≈ $${(aiStatus.needing_images * 0.04).toFixed(2)}.\n` +
+                    'Run the CLI command locally and upload results after.'
+                  );
+                  if (!confirmed) return;
+                  alert('Copy and run this command in your terminal:\n\npython scripts/ai_images.py all\n\nThen return here and refresh.');
+                }}
+              >
+                Generate via CLI (DALL-E 3)
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={async () => {
+                  try {
+                    const r = await aiImages.getPrompt(list[0]?.id || 1);
+                    if (r.success) {
+                      navigator.clipboard.writeText(r.prompt);
+                      alert(`Prompt for "${r.product?.name}" copied to clipboard:\n\n${r.prompt.substring(0, 200)}...`);
+                    }
+                  } catch (e) {
+                    alert(e.message);
+                  }
+                }}
+              >
+                Copy sample prompt
+              </button>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                CLI command: <code>python scripts/ai_images.py all</code>
+              </span>
+            </div>
+          )}
+          {aiStatus.needing_images === 0 && (
+            <p style={{ fontSize: '0.875rem', color: 'var(--success)' }}>All products have images. No action needed.</p>
+          )}
+        </>
+      ) : (
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Unable to fetch status.</p>
+      )}
+    </div>
+
+    <div className="form-group" style={{ maxWidth: 280, marginBottom: '1rem' }}>
         <label>Category</label>
         <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
           <option value="">All</option>
@@ -140,13 +273,16 @@ export default function AdminProducts() {
                   <th>Name</th>
                   <th>Category</th>
                   <th>Price</th>
+                  <th style={{ width: 120 }}>AI Image</th>
                   <th>Featured</th>
                   <th>Active</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
-                {list.map((p) => (
+                {list.map((p) => {
+                  const placeholder = isPlaceholderImage(p.image_url);
+                  return (
                   <tr key={p.id}>
                     <td>
                       {p.image_url ? (
@@ -158,6 +294,19 @@ export default function AdminProducts() {
                     <td><strong>{p.name}</strong></td>
                     <td>{p.category_name}</td>
                     <td>₹{p.price_min}{p.price_max > p.price_min ? ` – ₹${p.price_max}` : ''}</td>
+                    <td>
+                      {placeholder ? (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--warning)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--warning)' }}></span>
+                          Placeholder
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--success)' }}></span>
+                          Custom
+                        </span>
+                      )}
+                    </td>
                     <td>{p.is_featured ? 'Yes' : 'No'}</td>
                     <td>{p.is_active ? 'Yes' : 'No'}</td>
                     <td style={{ position: 'relative' }}>
@@ -205,6 +354,31 @@ export default function AdminProducts() {
                             <button
                               type="button"
                               role="menuitem"
+                              className="btn btn-secondary btn-sm"
+                              style={{ width: '100%', justifyContent: 'flex-start', marginBottom: 6 }}
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleUploadProductImage(p);
+                              }}
+                            >
+                              Upload image
+                            </button>
+                            <button
+                              type="button"
+                              role="menuitem"
+                              className="btn btn-secondary btn-sm"
+                              style={{ width: '100%', justifyContent: 'flex-start', marginBottom: 6 }}
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleGenerateAiImage(p);
+                              }}
+                              disabled={aiGeneratingId === p.id}
+                            >
+                              {aiGeneratingId === p.id ? 'Generating…' : 'AI generate'}
+                            </button>
+                            <button
+                              type="button"
+                              role="menuitem"
                               className="btn btn-danger btn-sm"
                               style={{ width: '100%', justifyContent: 'flex-start' }}
                               onClick={() => {
@@ -219,7 +393,8 @@ export default function AdminProducts() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  )
+                })}
               </tbody>
             </table>
           </div>

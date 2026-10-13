@@ -109,6 +109,13 @@ export const adminCategories = admin('categories');
 export const adminOrders = admin('orders');
 export const adminBlog = admin('blog');
 
+// Admin: AI image generation helpers
+export const aiImages = {
+  status: () => api.get('admin/ai-images/index.php?action=status'),
+  listProducts: () => api.get('admin/ai-images/index.php?action=products_needing_images'),
+  getPrompt: (id) => api.get(`admin/ai-images/index.php?action=prompt&id=${encodeURIComponent(id)}`),
+};
+
 export async function bulkUpdateProductImage(fileOrUrl) {
   const base = (import.meta.env.VITE_API_URL || '/api').replace(/\/$/, '');
   const url = `${base}/admin/products/bulk_image.php`;
