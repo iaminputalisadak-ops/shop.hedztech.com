@@ -18,10 +18,13 @@ Options -Indexes
   RewriteBase /
 
   RewriteCond %{HTTP_HOST} ^www\.shop\.hedztech\.com$ [NC]
-  RewriteRule ^(.*)$ https://shop.hedztech.com/$1 [R=301,L]
+  RewriteRule ^(.*)$ https://shop.hedztech.com/ [R=301,L]
 
   RewriteCond %{HTTP:Authorization} .
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+  RewriteRule ^api/(.*)$ /backend/api/ [L]
+  RewriteRule ^backend/api/(.*)$ /backend/api/ [L]
 
   RewriteRule ^sitemap\.php$ /backend/sitemap.php [L]
   RewriteCond %{DOCUMENT_ROOT}/sitemap.xml !-f
