@@ -82,7 +82,7 @@ export default function Category() {
             { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/` },
             { '@type': 'ListItem', position: 2, name: category.name, item: `${BASE_URL}${canonicalPath}` },
           ],
-        }}]}
+         }]}
       />
       <motion.h1
         style={{ fontFamily: 'var(--font-head)', fontSize: '1.75rem', marginBottom: 8 }}
@@ -121,7 +121,20 @@ export default function Category() {
                    if (e.key === 'Enter' || e.key === ' ') navigate(p.slug ? `/product/${p.id}/${p.slug}` : `/product/${p.id}`);
                 }}
               >
-                  {p.image_url && <img src={p.image_url} alt="" style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 12 }} />}
+                   {p.image_url && (
+                     <div style={{ aspectRatio: 1 / 1, width: '100%', borderRadius: 8, marginBottom: 12, overflow: 'hidden', background: 'var(--surface2)' }}>
+                       <img 
+                         src={p.image_url} 
+                         alt="" 
+                         style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                         loading="lazy"
+                         onError={(e) => {
+                           e.target.onerror = null;
+                           e.target.src = '/api/cover.php';
+                         }}
+                       />
+                     </div>
+                   )}
                   <h3 style={{ fontSize: '1rem', marginBottom: 6 }}>{p.name}</h3>
                   <div style={{ marginBottom: 8 }}>
                     {(() => {

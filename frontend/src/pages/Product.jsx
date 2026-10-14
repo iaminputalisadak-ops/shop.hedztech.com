@@ -145,11 +145,20 @@ const productFaqJsonLd = {
             {product.discount_percent > 0 || discountPercent > 0 ? (
               <span className="product-sale-badge">Sale!</span>
             ) : null}
-            {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="product-image" />
-            ) : (
-              <div className="product-image-placeholder">No image</div>
-            )}
+             {product.image_url ? (
+               <img 
+                 src={product.image_url} 
+                 alt={product.name} 
+                 className="product-image"
+                 loading="lazy"
+                 onError={(e) => {
+                   e.target.onerror = null;
+                   e.target.src = '/api/cover.php';
+                 }}
+               />
+             ) : (
+               <div className="product-image-placeholder">No image</div>
+             )}
           </div>
           <p className="product-disclaimer">This image is for product reference only.</p>
           <p className="product-delivery-info">
@@ -229,17 +238,29 @@ const productFaqJsonLd = {
           </h2>
           <div className="product-related-grid">
             {related.slice(0, 4).map((p) => (
-              <Link key={p.id} to={productUrl(p)} className="product-related-card">
-                {p.image_url ? <img src={p.image_url} alt="" /> : <div className="product-related-placeholder" />}
-                <span className="product-related-brand">{p.brand_name || p.category_name}</span>
-                <h3>{p.name}</h3>
-                <div className="product-related-price">
-                  <span className="product-related-current">₹{p.variants?.[0]?.price ?? p.price_min}</span>
-                  {(p.original_price > 0 || p.variants?.[0]?.original_price > 0) && (
-                    <span className="product-related-original">₹{p.original_price || p.variants?.[0]?.original_price}</span>
-                  )}
-                </div>
-              </Link>
+               <Link key={p.id} to={productUrl(p)} className="product-related-card">
+                 {p.image_url ? (
+                   <img 
+                     src={p.image_url} 
+                     alt="" 
+                     loading="lazy"
+                     onError={(e) => {
+                       e.target.onerror = null;
+                       e.target.src = '/api/cover.php';
+                     }}
+                   />
+                 ) : (
+                   <div className="product-related-placeholder" />
+                 )}
+                 <span className="product-related-brand">{p.brand_name || p.category_name}</span>
+                 <h3>{p.name}</h3>
+                 <div className="product-related-price">
+                   <span className="product-related-current">₹{p.variants?.[0]?.price ?? p.price_min}</span>
+                   {(p.original_price > 0 || p.variants?.[0]?.original_price > 0) && (
+                     <span className="product-related-original">₹{p.original_price || p.variants?.[0]?.original_price}</span>
+                   )}
+                 </div>
+               </Link>
             ))}
           </div>
         </section>

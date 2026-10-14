@@ -465,15 +465,22 @@ function ProductCard({ product }) {
            if (e.key === 'Enter' || e.key === ' ') navigate(product.slug ? `/product/${product.id}/${product.slug}` : `/product/${product.id}`);
         }}
       >
-          {product.image_url && (
-            <motion.img
-              src={product.image_url}
-              alt=""
-              style={{ width: '100%', height: 140, objectFit: 'cover', borderRadius: 8, marginBottom: 12 }}
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-            />
-          )}
+           {product.image_url && (
+             <div style={{ aspectRatio: 1 / 1, width: '100%', borderRadius: 8, marginBottom: 12, overflow: 'hidden', background: 'var(--surface2)' }}>
+               <motion.img
+                 src={product.image_url}
+                 alt=""
+                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                 loading="lazy"
+                 onError={(e) => {
+                   e.target.onerror = null;
+                   e.target.src = '/api/cover.php';
+                 }}
+                 whileHover={{ scale: 1.02 }}
+                 transition={{ duration: 0.3 }}
+               />
+             </div>
+           )}
           <h3 style={{ fontSize: '1rem', marginBottom: 6, lineHeight: 1.3 }}>{product.name}</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
             <span style={{ fontWeight: 700, color: 'var(--accent)' }}>{displayPrice}</span>

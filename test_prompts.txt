@@ -1,0 +1,81 @@
+# Test Prompt Examples (5–10 Sample Products)
+
+## Example 1: Windows 11 Pro
+- Name: Windows 11 Pro
+- Category: windows
+- Brand: Microsoft
+- Short Description: License key card, digital download, 64-bit
+- Generated Prompt:
+Professional product photography of Windows 11 Pro, Windows operating system license key card, digital software, clean minimal studio lighting, pristine white background, Microsoft Windows branding, blue color scheme, sharp focus, 8K resolution, commercial product shot style, featuring Microsoft branding and color scheme, representing: License key card, digital download, 64-bit
+
+## Example 2: Microsoft Office 2021 Professional Plus
+- Name: Microsoft Office 2021 Professional Plus
+- Category: office-2021
+- Brand: Microsoft
+- Short Description: One-time purchase, includes Word, Excel, PowerPoint
+- Generated Prompt:
+Professional product photography of Microsoft Office 2021 Professional Plus, Microsoft Office suite packaging, digital license, overhead shot of Office applications on a computer monitor, clean office desk with laptop, professional lighting, Microsoft blue and white color palette, sharp focus, 8K resolution, commercial product shot, featuring Microsoft branding and color scheme, representing: One-time purchase, includes Word, Excel, PowerPoint
+
+## Example 3: Adobe Photoshop Single App
+- Name: Adobe Photoshop
+- Category: adobe-products
+- Brand: Adobe
+- Short Description: 1-year subscription, latest version
+- Generated Prompt:
+Professional product photography of Adobe Photoshop, Adobe Creative Cloud software on computer monitor, creative workspace with Photoshop, Illustrator, or Acrobat interface, Adobe magenta and purple color palette, minimalist style, sharp focus, 8K resolution, commercial product shot, featuring Adobe branding and color scheme, representing: 1-year subscription, latest version
+
+## Example 4: VMware Workstation Pro
+- Name: VMware Workstation Pro
+- Category: vmware-virtualization
+- Brand: VMware
+- Short Description: Run multiple OS on a single PC, license for 1 year
+- Generated Prompt:
+Professional product photography of VMware Workstation Pro, VMware or Parallels virtualization software interface, showing multiple operating systems running in windows, clean tech background, professional lighting, sharp focus, 8K resolution, commercial product shot, featuring VMware branding and color scheme, representing: Run multiple OS on a single PC, license for 1 year
+
+## Example 5: Bitdefender Antivirus Plus
+- Name: Bitdefender Antivirus Plus
+- Category: antivirus-security
+- Brand: Bitdefender
+- Short Description: Real-time protection, anti-ransomware, 1-year license
+- Generated Prompt:
+Professional product photography of Bitdefender Antivirus Plus, antivirus/cybersecurity software interface, shield and circuit board motifs, green/blue tech colors, glowing digital security visualization, dark professional background, sharp focus, 8K resolution, commercial product shot, featuring Bitdefender branding and color scheme, representing: Real-time protection, anti-ransomware, 1-year license
+
+## Example 6: Lumion 3D Architectural Rendering
+- Name: Lumion 3D
+- Category: lumion
+- Brand: Lumion
+- Short Description: 3D visualization software for architects, perpetual license
+- Generated Prompt:
+Professional product photography of Lumion 3D, Lumion or design architecture software showing 3D rendering, modern building render on large monitor, interior/exterior design, clean studio background, professional lighting, sharp focus, 8K resolution, commercial product shot, featuring Lumion branding and color scheme, representing: 3D visualization software for architects, perpetual license
+
+## Example 7: Parallels Desktop for Mac
+- Name: Parallels Desktop
+- Category: parallel-desktop
+- Brand: Parallels
+- Short Description: Run Windows on Mac, seamless integration, 1-year subscription
+- Generated Prompt:
+Professional product photography of Parallels Desktop, VMware or Parallels virtualization software interface, showing multiple operating systems running in windows, clean tech background, professional lighting, sharp focus, 8K resolution, commercial product shot, featuring Parallels branding and color scheme, representing: Run Windows on Mac, seamless integration, 1-year subscription
+
+## Example 8: QuickBooks Accounting Software
+- Name: QuickBooks Online
+- Category: accounting-software
+- Brand: Intuit
+- Short Description: Cloud accounting, invoicing, payroll, monthly subscription
+- Generated Prompt:
+Professional product photography of QuickBooks Online, accounting software interface showing financial charts, clean office desk with laptop, professional lighting, subtle green/blue accents, professional aesthetic, sharp focus, 8K resolution, commercial product shot, featuring Intuit branding and color scheme, representing: Cloud accounting, invoicing, payroll, monthly subscription
+
+## Example 9: Norton 360 Deluxe
+- Name: Norton 360 Deluxe
+- Category: antivirus-security
+- Brand: Norton
+- Short Description: VPN, dark web monitoring, 5 devices, 1-year
+- Generated Prompt:
+Professional product photography of Norton 360 Deluxe, antivirus/cybersecurity software interface, shield and circuit board motifs, green/blue tech colors, glowing digital security visualization, dark professional background, sharp focus, 8K resolution, commercial product shot, featuring Norton branding and color scheme, representing: VPN, dark web monitoring, 5 devices, 1-year
+
+## Example 10: Bundle Key Pack (Windows + Office)
+- Name: Windows 11 + Office 2021 Bundle
+- Category: bundle-keys
+- Brand: Microsoft
+- Short Description: Two license cards, savings pack
+- Generated Prompt:
+Professional product photography of Windows 11 + Office 2021 Bundle, bundle of software license key cards, digital products, arranged neatly on white background, studio lighting, various brand logos visible if provided in data, sharp focus, 8K resolution, commercial product shot, featuring Microsoft branding and color scheme, representing: Two license cards, savings pack

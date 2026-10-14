@@ -179,19 +179,28 @@ export default function AdminProducts() {
           >
             Choose image
           </button>
-          {bulkImagePreview && (
-            <>
-              <img src={bulkImagePreview} alt="Preview" style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface2)' }} />
-              <button
-                type="button"
-                className="btn btn-primary btn-sm"
-                onClick={handleBulkImageApply}
-                disabled={bulkApplying}
-              >
-                {bulkApplying ? 'Applying…' : 'Apply to all products'}
-              </button>
-            </>
-          )}
+           {bulkImagePreview && (
+             <>
+               <img 
+                 src={bulkImagePreview} 
+                 alt="Preview" 
+                 style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface2)' }}
+                 loading="lazy"
+                 onError={(e) => {
+                   e.target.onerror = null;
+                   e.target.src = '/api/cover.php';
+                 }}
+               />
+               <button
+                 type="button"
+                 className="btn btn-primary btn-sm"
+                 onClick={handleBulkImageApply}
+                 disabled={bulkApplying}
+               >
+                 {bulkApplying ? 'Applying…' : 'Apply to all products'}
+               </button>
+             </>
+           )}
       </div>
     </div>
 
@@ -284,13 +293,23 @@ export default function AdminProducts() {
                   const placeholder = isPlaceholderImage(p.image_url);
                   return (
                   <tr key={p.id}>
-                    <td>
-                      {p.image_url ? (
-                        <img src={p.image_url} alt="" className="admin-product-thumb" style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface2)' }} />
-                      ) : (
-                        <span className="admin-product-no-img" style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, border: '1px dashed var(--border)', background: 'var(--surface2)', color: 'var(--text-muted)', fontSize: 10 }} title="No image">—</span>
-                      )}
-                    </td>
+                     <td>
+                       {p.image_url ? (
+                         <img 
+                           src={p.image_url} 
+                           alt="" 
+                           className="admin-product-thumb"
+                           style={{ width: 40, height: 40, objectFit: 'contain', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface2)' }}
+                           loading="lazy"
+                           onError={(e) => {
+                             e.target.onerror = null;
+                             e.target.src = '/api/cover.php';
+                           }}
+                         />
+                       ) : (
+                         <span className="admin-product-no-img" style={{ width: 40, height: 40, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, border: '1px dashed var(--border)', background: 'var(--surface2)', color: 'var(--text-muted)', fontSize: 10 }} title="No image">—</span>
+                       )}
+                     </td>
                     <td><strong>{p.name}</strong></td>
                     <td>{p.category_name}</td>
                     <td>₹{p.price_min}{p.price_max > p.price_min ? ` – ₹${p.price_max}` : ''}</td>

@@ -1,0 +1,98 @@
+{
+  "microsoft_os": [
+    "Professional product photography of {name}",
+    "Windows operating system license key card, digital software",
+    "clean minimal studio lighting, pristine white background",
+    "Microsoft Windows branding, blue color scheme",
+    "sharp focus, 8K resolution, commercial product shot style",
+    "no watermark, no text overlay except brand logo"
+  ],
+  "microsoft_office": [
+    "Professional product photography of {name}",
+    "Microsoft Office suite packaging, digital license",
+    "overhead shot of Office applications on a computer monitor",
+    "clean office desk with laptop, professional lighting",
+    "Microsoft blue and white color palette",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "microsoft_project_visio_access": [
+    "Professional product photography of {name}",
+    "Microsoft Project/Visio/Access software interface on screen",
+    "business planning, charts, diagrams, or database interface",
+    "professional office environment, clean lighting",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "adobe_creative": [
+    "Professional product photography of {name}",
+    "Adobe Creative Cloud software on computer monitor",
+    "creative workspace with Photoshop, Illustrator, or Acrobat interface",
+    "Adobe magenta and purple color palette, minimalist style",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "design_architecture": [
+    "Professional product photography of {name}",
+    "Lumion or design architecture software showing 3D rendering",
+    "modern building render on large monitor, interior/exterior design",
+    "clean studio background, professional lighting",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "virtualization": [
+    "Professional product photography of {name}",
+    "VMware or Parallels virtualization software interface",
+    "showing multiple operating systems running in windows",
+    "clean tech background, professional lighting",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "antivirus_security": [
+    "Professional product photography of {name}",
+    "antivirus/cybersecurity software interface",
+    "shield and circuit board motifs, green/blue tech colors",
+    "glowing digital security visualization, dark professional background",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "cloud_streaming": [
+    "Professional product photography of {name}",
+    "subscription service interface, modern app UI",
+    "smartphone and laptop showing streaming/cloud app",
+    "clean modern background, soft gradient lighting",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "ai_others": [
+    "Professional product photography of {name}",
+    "AI software interface on computer screen",
+    "futuristic tech elements, neural network visualization",
+    "clean modern background, professional lighting",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "accounting_software": [
+    "Professional product photography of {name}",
+    "accounting software interface showing financial charts",
+    "clean office desk with laptop, professional lighting",
+    "subtle green/blue accents, professional aesthetic",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay"
+  ],
+  "bundle_keys": [
+    "Professional product photography of {name}",
+    "bundle of software license key cards, digital products",
+    "arranged neatly on white background, studio lighting",
+    "various brand logos visible if provided in data",
+    "sharp focus, 8K resolution, commercial product shot",
+    "no watermark, no text overlay except brand logos"
+  ],
+  "default": [
+    "Professional product photography of {name}",
+    "software license key card, digital technology product",
+    "clean minimal studio lighting, pristine white background",
+    "sharp focus, 8K resolution, commercial product shot style",
+    "no watermark, no text overlay except brand logo"
+  ]
+}
