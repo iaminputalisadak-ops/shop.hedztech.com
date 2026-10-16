@@ -40,6 +40,9 @@ fs.mkdirSync(staging, { recursive: true });
 
 copy(path.join(root, 'frontend', 'dist'), staging);
 copy(path.join(root, 'backend', 'api'), path.join(staging, 'backend'));
+// Product images live in backend/uploads/ (served as /uploads/). Without this
+// copy, admin uploads AND generated product images 404 in production.
+copy(path.join(root, 'backend', 'uploads'), path.join(staging, 'backend', 'uploads'));
 copy(path.join(root, 'deploy', 'htaccess-cpanel-subdomain.txt'), path.join(staging, '.htaccess'));
 copy(path.join(root, 'frontend', 'public', 'robots.txt'), path.join(staging, 'robots.txt'));
 

@@ -4,7 +4,12 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 import ftplib
+
+RETRIES = 4
+# Code files can change without changing size, so always upload them.
+ALWAYS_UPLOAD = (".php", ".html", ".js", ".css", ".json", ".xml", ".txt", ".htaccess")
 
 SKIP_NAMES = {".git", "node_modules"}
 SKIP_SUFFIXES = (
@@ -74,10 +79,38 @@ def main() -> int:
 
     uploaded = 0
     skipped = 0
-    ftp = connect(cfg)
-    print("Connected to", cfg["host"], "as", cfg["username"])
+    unchanged = 0
+    state = {"ftp": connect(cfg)}
+    print("Connected to", cfg["host"], "as", cfg["username"], flush=True)
     if site:
         print("Site", site)
+
+    def with_retry(label: str, action):
+        for attempt in range(1, RETRIES + 1):
+            try:
+                return action(state["ftp"])
+            except ftplib.error_perm:
+                raise
+            except (EOFError, OSError, ftplib.Error) as exc:
+                if attempt == RETRIES:
+                    raise
+                print(f"  connection dropped on {label} ({type(exc).__name__}); reconnecting...", flush=True)
+                try:
+                    state["ftp"].close()
+                except Exception:
+                    pass
+                time.sleep(2 * attempt)
+                state["ftp"] = connect(cfg)
+
+    def same_size(ftp: ftplib.FTP, remote: str, local: str) -> bool:
+        try:
+            return ftp.size(remote) == os.path.getsize(local)
+        except ftplib.error_perm:
+            return False
+
+    def store(ftp: ftplib.FTP, remote: str, local: str) -> None:
+        with open(local, "rb") as fh:
+            ftp.storbinary("STOR " + remote, fh)
 
     try:
         for dirpath, dirnames, filenames in os.walk(staging):
@@ -87,7 +120,7 @@ def main() -> int:
                 remote_dir = remote_root + "/" if remote_root else "/"
             else:
                 remote_dir = (remote_root + "/" + rel_dir.replace("\\", "/")).replace("//", "/")
-            ensure_dir(ftp, remote_dir)
+            with_retry(remote_dir, lambda f: ensure_dir(f, remote_dir))
 
             for name in filenames:
                 local = os.path.join(dirpath, name)
@@ -98,18 +131,22 @@ def main() -> int:
                 remote = (remote_root + "/" + rel).replace("//", "/")
                 if not remote.startswith("/"):
                     remote = "/" + remote
-                with open(local, "rb") as fh:
-                    ftp.storbinary("STOR " + remote, fh)
+                if not name.lower().endswith(ALWAYS_UPLOAD) and with_retry(
+                    remote, lambda f: (f.voidcmd("TYPE I"), same_size(f, remote, local))[1]
+                ):
+                    unchanged += 1
+                    continue
+                with_retry(remote, lambda f: store(f, remote, local))
                 uploaded += 1
                 if uploaded % 25 == 0:
-                    print("uploaded", uploaded, "files...")
+                    print("uploaded", uploaded, "files...", flush=True)
     finally:
         try:
-            ftp.quit()
+            state["ftp"].quit()
         except Exception:
-            ftp.close()
+            state["ftp"].close()
 
-    print("Uploaded", uploaded, "files. Skipped", skipped, "(zip/sql/database.php).")
+    print("Uploaded", uploaded, "files. Unchanged", unchanged, ". Skipped", skipped, "(zip/sql/database.php).")
     print("Did not overwrite config/database.php.")
     return 0
 

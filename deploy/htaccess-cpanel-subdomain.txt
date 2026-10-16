@@ -25,6 +25,9 @@ Options -Indexes
 
   RewriteRule ^api/(.*)$ /backend/api/ [L]
   RewriteRule ^backend/api/(.*)$ /backend/api/ [L]
+  RewriteRule ^backend/admin/(.*)$ /backend/admin/ [L]
+  RewriteRule ^backend/(products|categories|blog|homepage|orders|settings|auth|uploads)/(.*)$ /backend/$1/$2 [L]
+  RewriteRule ^uploads/(.*)$ /backend/uploads/$1 [L]
 
   RewriteRule ^sitemap\.php$ /backend/sitemap.php [L]
   RewriteCond %{DOCUMENT_ROOT}/sitemap.xml !-f

@@ -12,13 +12,6 @@ $today = date('Y-m-d');
 
 $urls = [
     ['loc' => $base . '/', 'priority' => '1.0', 'freq' => 'daily', 'lastmod' => $today],
-    ['loc' => $base . '/about', 'priority' => '0.6', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/contact', 'priority' => '0.6', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/faq', 'priority' => '0.7', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/refund-policy', 'priority' => '0.5', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/privacy-policy', 'priority' => '0.5', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/terms', 'priority' => '0.5', 'freq' => 'monthly', 'lastmod' => $today],
-    ['loc' => $base . '/disclaimer', 'priority' => '0.4', 'freq' => 'monthly', 'lastmod' => $today],
     ['loc' => $base . '/blog', 'priority' => '0.8', 'freq' => 'weekly', 'lastmod' => $today],
 ];
 
@@ -57,7 +50,7 @@ if ($configFile) {
             $prods = $pdo->query('SELECT id, slug, updated_at FROM products WHERE is_active = 1 ORDER BY id DESC');
             foreach ($prods as $p) {
                 $slug = trim((string) ($p['slug'] ?? ''));
-                $path = $slug !== '' ? '/product/' . (int) $p['id'] . '/' . rawurlencode($slug) : '/product/' . (int) $p['id'];
+                $path = '/product/' . ($slug !== '' ? rawurlencode($slug) : (int) $p['id']);
                 $urls[] = [
                     'loc' => $base . $path,
                     'priority' => '0.8',
