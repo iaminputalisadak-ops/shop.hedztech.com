@@ -57,5 +57,77 @@ if ($action === 'sales_chart') {
     exit;
 }
 
+// Admin audit log endpoint - paginated audit entries
+if ($action === 'audit') {
+    $page = max(1, (int)($_GET['page'] ?? 1));
+    $limit = 20;
+    $offset = ($page - 1) * $limit;
+    $stmt = $pdo->prepare(
+        'SELECT a.id, a.admin_id, u.username, a.action, a.target_id, a.details, a.created_at
+         FROM admin_audit a
+         JOIN admin_users u ON a.admin_id = u.id
+         ORDER BY a.created_at DESC
+         LIMIT :limit OFFSET :offset'
+    );
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $rows = $stmt->fetchAll();
+    echo json_encode(['success' => true, 'data' => $rows, 'page' => $page]);
+    exit;
+}
+
+// Admin settings get/set
+if ($action === 'settings') {
+    $key = $_GET['key'] ?? null;
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        if (!$key) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Missing key']);
+            exit;
+        }
+        $stmt = $pdo->prepare('SELECT `value` FROM admin_settings WHERE `key` = ?');
+        $stmt->execute([$key]);
+        $val = $stmt->fetchColumn();
+        echo json_encode(['success' => true, 'data' => ['key' => $key, 'value' => $val]]);
+        exit;
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $value = $payload['value'] ?? null;
+        if (!$key || $value === null) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Missing key or value']);
+            exit;
+        }
+        $stmt = $pdo->prepare('INSERT INTO admin_settings (`key`, `value`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)');
+        $stmt->execute([$key, $value]);
+        echo json_encode(['success' => true]);
+        exit;
+    }
+}
+
+// Admin notifications list
+if ($action === 'notifications') {
+    $stmt = $pdo->query('SELECT id, `type`, message, is_read, created_at FROM admin_notifications ORDER BY created_at DESC');
+    $rows = $stmt->fetchAll();
+    echo json_encode(['success' => true, 'data' => $rows]);
+    exit;
+}
+
+// Mark notification as read
+if ($action === 'mark_notification') {
+    $payload = json_decode(file_get_contents('php://input'), true);
+    $id = $payload['id'] ?? null;
+    if (!$id) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Missing id']);
+        exit;
+    }
+    $stmt = $pdo->prepare('UPDATE admin_notifications SET is_read = 1 WHERE id = ?');
+    $stmt->execute([$id]);
+    echo json_encode(['success' => true]);
+    exit;
+}
+
 http_response_code(400);
 echo json_encode(['success' => false, 'message' => 'Invalid action']);

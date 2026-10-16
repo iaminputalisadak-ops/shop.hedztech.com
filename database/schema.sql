@@ -140,3 +140,30 @@ ON DUPLICATE KEY UPDATE name=VALUES(name), price_min=VALUES(price_min), price_ma
 INSERT INTO product_variants (product_id, name, price, original_price)
 SELECT p.id, 'Default', p.price_min, p.original_price FROM products p
 WHERE p.id <= 8 AND NOT EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = p.id);
+
+-- Admin audit log
+CREATE TABLE IF NOT EXISTS admin_audit (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT UNSIGNED NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    target_id INT UNSIGNED NULL,
+    details TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
+);
+
+-- Admin key-value settings
+CREATE TABLE IF NOT EXISTS admin_settings (
+    `key` VARCHAR(100) PRIMARY KEY,
+    `value` TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Admin notifications (optional UI messages)
+CREATE TABLE IF NOT EXISTS admin_notifications (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `type` ENUM('info','warning','error') DEFAULT 'info',
+    message TEXT NOT NULL,
+    is_read TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -1182,6 +1182,27 @@ table tr:hover td {
   background: rgba(255,255,255,0.02);
 }
 
+/* Badge styles for notifications */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.badge-info {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+.badge-warning {
+  background: #fff3cd;
+  color: #856404;
+}
+.badge-error {
+  background: #f8d7da;
+  color: #721c24;
+}
+
 /* Blog/content typography */
 .content-page-body h2,
 .content-page-body h3 {

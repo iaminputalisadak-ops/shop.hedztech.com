@@ -8,3 +8,5 @@ export { default as AdminBlogEditor } from './AdminBlogEditor';
 export { default as AdminSettings } from './AdminSettings';
 export { default as AdminPages } from './AdminPages';
 export { default as AdminAiSeo } from './AdminAiSeo';
+export { default as AdminAudit } from './AdminAudit';
+export { default as AdminNotifications } from './AdminNotifications';

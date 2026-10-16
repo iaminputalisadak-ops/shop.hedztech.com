@@ -19,6 +19,8 @@ import AdminOrders from './admin/AdminOrders';
 import AdminAiSeo from './admin/AdminAiSeo';
 import AdminBlog from './admin/AdminBlog';
 import AdminBlogEditor from './admin/AdminBlogEditor';
+import AdminAudit from './admin/AdminAudit';
+import AdminNotifications from './admin/AdminNotifications';
 import ContentPage from './pages/ContentPage';
 import FAQPage from './pages/FAQ';
 import BlogIndex from './pages/BlogIndex';
@@ -72,6 +74,8 @@ export default function App() {
         <Route path="blog/edit/:id" element={<AdminBlogEditor />} />
         <Route path="settings" element={<AdminSettings />} />
         <Route path="pages" element={<AdminPages />} />
+        <Route path="audit" element={<AdminAudit />} />
+        <Route path="notifications" element={<AdminNotifications />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

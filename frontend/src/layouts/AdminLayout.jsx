@@ -24,6 +24,8 @@ export default function AdminLayout() {
           <Link to="/admin/products/new" style={linkStyle}>Add Product</Link>
           <Link to="/admin/ai-seo" style={{ ...linkStyle, color: 'var(--primary)', fontWeight: 'bold' }}>✨ AI SEO & Images</Link>
           <Link to="/admin/categories" style={linkStyle}>Categories</Link>
+          <Link to="/admin/audit" style={linkStyle}>Audit Log</Link>
+          <Link to="/admin/notifications" style={linkStyle}>Notifications</Link>
           <Link to="/admin/settings" style={linkStyle}>Footer & Settings</Link>
           <Link to="/admin/pages" style={linkStyle}>Pages</Link>
         </nav>

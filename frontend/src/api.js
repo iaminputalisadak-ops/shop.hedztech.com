@@ -109,6 +109,16 @@ export const adminCategories = admin('categories');
 export const adminOrders = admin('orders');
 export const adminBlog = admin('blog');
 
+// Admin dashboard helper functions
+export const adminAudit = {
+  list: (page = 1) => api.get(`admin/dashboard/index.php?action=audit&page=${page}`),
+};
+
+export const adminNotifications = {
+  list: () => api.get('admin/dashboard/index.php?action=notifications'),
+  markRead: (id) => api.post('admin/dashboard/index.php?action=mark_notification', { id }),
+};
+
 // Admin: AI image generation helpers
 export const aiImages = {
   status: () => api.get('admin/ai-images/index.php?action=status'),
